@@ -49,6 +49,7 @@ openssl rsa -pubout -in private.pem -out public.pem
 ```
 
 Move back into the application's root directory and install the application's dependencies:
+
 ```bash
 cd ..
 composer install
@@ -56,8 +57,14 @@ composer install
 
 Copy the .env file in the email in the application root.
 
+Create the database and apply migrations:
 
-Install the symfony CLI:
+```bash
+php bin/console doctrine:database:create
+php bin/console doctrine:migrations:migrate
+```
+
+Install the Symfony CLI:
 
 ```bash
 echo 'deb [trusted=yes] https://repo.symfony.com/apt/ /' | sudo tee /etc/apt/sources.list.d/symfony-cli.list
