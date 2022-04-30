@@ -1,6 +1,7 @@
 # Requirements:
 - This setup requires an ubuntu 20.04
 - This application is developed using PHP 8.1.5.
+- Composer must be installed to the latest version to install the dependencies.
 - Docker must be installed if MySQL is not installed.
 
 # Setup the database:
@@ -47,12 +48,14 @@ openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:2048
 openssl rsa -pubout -in private.pem -out public.pem
 ```
 
-Move back into the application's root directory:
+Move back into the application's root directory and install the application's dependencies:
 ```bash
 cd ..
+composer install
 ```
 
 Copy the .env file in the email in the application root.
+
 
 Install the symfony CLI:
 
@@ -62,10 +65,9 @@ sudo apt update
 sudo apt install symfony-cli
 ```
 
-Move back into the application's root directory and start the development server:
+Start the development server:
 
 ```bash
-cd ..
 symfony server:start
 ```
 # Usage
