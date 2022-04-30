@@ -1,9 +1,14 @@
 document
 .addEventListener('DOMContentLoaded', () => {
 
-    const button = document.getElementById('download-button');
+    const downloadButton = document.getElementById('download-button');
+    const logoutLink = document.getElementById('logout');
 
-    button.addEventListener('click', async e => {
+    if (!downloadButton || !logoutLink) {
+        throw new Error('Page elements not found');
+    }
+
+    downloadButton.addEventListener('click', async e => {
 
         e.preventDefault();
         
@@ -13,5 +18,23 @@ document
         a.click();
         
     });
+
+    logoutLink.addEventListener('click', async e => {
+
+        e.preventDefault();
+
+        const response = await fetch('/api/logout', { method: 'post' });
+
+        if (response.status) {
+            window.location.assign('/login');
+        }
+
+        else {
+            throw new Error('Unexpected error');
+        }
+
+    });
+
+
 
 });

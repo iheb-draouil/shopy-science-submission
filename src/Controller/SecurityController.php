@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -70,6 +71,28 @@ class SecurityController extends BaseController
         }
 
         assert($app_user instanceof AppUser);
+        
+        $validation = $this->validator->validate($app_user);
+
+        if (count($validation) != 0) {
+
+            return new JsonResponse([
+                'error' => ErrorMessage::VALIDATION_FAILURE,
+                'fields' => $this->toValidationErrorMap($validation)
+            ], Response::HTTP_BAD_REQUEST);
+
+        }
+
+        $other_app_users = $this->doctrine->getRepository(AppUser::class)
+        ->findBy(['username' => $app_user->username]);
+
+        if (count($other_app_users) != 0) {
+
+            return new JsonResponse([
+                'error' => ErrorMessage::DUPLICATE_RECORD,
+            ], Response::HTTP_BAD_REQUEST);
+
+        }
 
         $hashed_password = $this->password_hasher->hash(
             $app_user->password,
@@ -159,7 +182,7 @@ class SecurityController extends BaseController
         return $response;
     }
     
-    #[Route(SecurityController::refresh_path, methods: 'GET', name: 'refresh')]
+    #[Route('/api/refresh', methods: 'GET', name: 'refresh')]
     public function refresh(Request $request)
     {
         $referer = $request->headers->get('referer');
@@ -194,8 +217,12 @@ class SecurityController extends BaseController
     #[Route('api/logout', methods: 'POST', name: 'revoke')]
     public function logout()
     {
+        $security_user = $this->getUser();
+
+        assert($security_user instanceof SecurityUser);
+
         $app_user = $this->doctrine->getRepository(AppUser::class)
-        ->findOneBy(['username']);
+        ->find($security_user->id);
 
         if (!$app_user) {
 

@@ -5,3 +5,9 @@ controllers:
 kernel:
     resource: ../src/Kernel.php
     type: annotation
+
+default-route:
+    path: /{req}
+    defaults: { _controller: 'App\Controller\DefaultController::catchAll' }
+    requirements:
+        req: ".*"

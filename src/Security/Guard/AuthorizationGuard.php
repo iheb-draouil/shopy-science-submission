@@ -9,9 +9,13 @@ use App\Definition\Exception\RefreshRequired;
 use App\Definition\JWTCookieNames;
 use App\Definition\ServiceResponse\AppFailureResponse;
 use App\Definition\SecurityUser;
+use App\Definition\ServiceResponse\AppSuccessResponse;
+use App\Entity\ActiveSession;
+use App\Entity\AppUser;
 use App\Service\JWTExtractor;
 use App\Service\JWTHandler;
 use DateTimeImmutable;
+use Doctrine\Persistence\ManagerRegistry;
 use Lcobucci\JWT\UnencryptedToken;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,11 +43,16 @@ class AuthorizationGuard extends AbstractAuthenticator
 
     private $jwt_extractor;
     private $jwt_handler;
+    private $doctrine;
 
-    public function __construct(JWTExtractor $jwt_extractor, JWTHandler $jwt_handler)
-    {
+    public function __construct(
+        JWTExtractor $jwt_extractor,
+        ManagerRegistry $doctrine,
+        JWTHandler $jwt_handler,
+    ) {
         $this->jwt_extractor = $jwt_extractor;
         $this->jwt_handler = $jwt_handler;
+        $this->doctrine = $doctrine;
     }
 
     public function supports(Request $request): ?bool
@@ -63,8 +72,26 @@ class AuthorizationGuard extends AbstractAuthenticator
             if ($refresh_token_response instanceof AppFailureResponse) {
                 throw new LoginRequired();
             }
+                
+            [
+                'id' => $id,
+                'username' => $username,
+            ] = $this->jwt_handler->parse($refresh_token_response->data);
 
-            throw new RefreshRequired($refresh_token_response->data);
+            $app_user = $this->doctrine->getRepository(AppUser::class)
+            ->find($id);
+
+            $active_session = $this->doctrine->getRepository(ActiveSession::class)
+            ->findOneBy(['app_user' => $app_user]);
+
+            if (!$active_session) {
+                throw new LoginRequired();
+            }
+            
+            throw new RefreshRequired([
+                'id' => $id,
+                'username' => $username,
+            ]);
         }
 
         assert($access_token_response->data instanceof UnencryptedToken);
@@ -94,15 +121,7 @@ class AuthorizationGuard extends AbstractAuthenticator
     
             $now = new DateTimeImmutable();
             
-            [
-                'id' => $id,
-                'username' => $username,
-            ] = $this->jwt_handler->parse($exception->token);
-            
-            $access_jwt = $this->jwt_handler->create([
-                'id' => $id,
-                'username' => $username,
-            ], $now->modify('+1 minute'));
+            $access_jwt = $this->jwt_handler->create($exception->data, $now->modify('+1 minute'));
     
             $access_cookie = Cookie::create(JWTCookieNames::access)
             ->withValue($access_jwt)
@@ -111,7 +130,7 @@ class AuthorizationGuard extends AbstractAuthenticator
     
             $response->headers->setCookie($access_cookie);
     
-            return new RedirectResponse($request->getPathInfo());
+            return $response;
         }
 
         return new RedirectResponse(SecurityController::login_path);

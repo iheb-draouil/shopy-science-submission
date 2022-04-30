@@ -2,15 +2,14 @@
 
 namespace App\Definition\Exception;
 
-use Lcobucci\JWT\UnencryptedToken;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class RefreshRequired extends AuthenticationException
 {
-    public $token;
+    public $data;
 
-    public function __construct(UnencryptedToken $token)
+    public function __construct(array $data)
     {
-        $this->token = $token;    
+        $this->data = $data;    
     }
 }

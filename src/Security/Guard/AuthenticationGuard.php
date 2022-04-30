@@ -32,7 +32,6 @@ class AuthenticationGuard extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
-        // return false;
         return $request->getPathInfo() == '/api/login';
     }
 

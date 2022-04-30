@@ -22,7 +22,7 @@ class AppUser
 
     #[ORM\Column(type: 'string')]
     #[Assert\Type('string')]
-    #[Assert\Regex('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/')]
+    #[Assert\Length(min: 5, max: 15)]
     public $password;
 
     #[ORM\Column(type: 'string', length: 100)]
