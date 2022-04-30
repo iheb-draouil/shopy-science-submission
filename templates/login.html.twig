@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="assets/login/login.css">
+{% endblock %}
+
+{% block javascripts %}
+    <script src="assets/login/jwt-decoder.js"></script>
+    <script src="assets/login/login.js"></script>
+{% endblock %}
+
+{% block body %}
+    <div id="login-form-wrap">
+        <h2>Login</h2>
+        <form id="login-form">
+            <p>
+                <input type="text" id="error-prompt" placeholder="Invalid username or password" disabled><i
+                    class="validation"><span></span><span></span></i>
+            </p>
+            <p>
+                <input type="text" id="username" name="username" placeholder="Username" required><i
+                    class="validation"><span></span><span></span></i>
+            </p>
+            <p>
+                <input type="password" id="password" name="email" placeholder="Password" required><i
+                    class="validation"><span></span><span></span></i>
+            </p>
+            <p>
+                <input type="submit" id="login-button" value="Login">
+            </p>
+        </form>
+        <div id="create-account-wrap">
+            <p>Not a member? <a href="/register">Create Account</a>
+            <p>
+        </div>
+    </div>
+{% endblock %}

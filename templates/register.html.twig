@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="assets/register/register.css">
+{% endblock %}
+
+{% block javascripts %}
+    <script src="assets/register/register.js"></script>
+{% endblock %}
+
+{% block body %}
+    <div id="register-form-wrap">
+        <h2>Registration</h2>
+        <form id="register-form">
+            <p>
+                <input type="text" id="username" name="username" placeholder="Username" required><i
+                    class="validation"><span></span><span></span></i>
+            </p>
+            <p>
+                <input type="email" id="password" name="email" placeholder="Password" required><i
+                    class="validation"><span></span><span></span></i>
+            </p>
+            <p>
+                <input type="email" id="password-again" name="email" placeholder="Re-type Password" required><i
+                    class="validation"><span></span><span></span></i>
+            </p>
+            <p>
+                <input type="submit" id="register-button" value="Register">
+            </p>
+        </form>
+        <div id="login-wrap">
+            <p>Already have an account? <a href="/login">Log in</a>
+            <p>
+        </div>
+    </div>
+{% endblock %}
