@@ -26,6 +26,12 @@ services:
             $time_cost: 4
             $threads: 3
 
+    # App\Middleware\After\ExceptionHandler:
+    #     tags:
+    #         # - { name: kernel.event_listener, event: kernel.controller }
+    #         # - { name: kernel.event_listener, event: kernel.response }
+    #         - { name: kernel.event_listener, event: kernel.exception }
+
 security:
 
     firewalls:

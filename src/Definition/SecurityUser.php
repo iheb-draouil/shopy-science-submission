@@ -2,9 +2,10 @@
 
 namespace App\Definition;
 
-use Lcobucci\JWT\UnencryptedToken;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+
+use Lcobucci\JWT\UnencryptedToken;
 
 class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
 {

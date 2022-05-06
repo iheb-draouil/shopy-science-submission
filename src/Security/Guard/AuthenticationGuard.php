@@ -4,8 +4,8 @@ namespace App\Security\Guard;
 
 use App\Definition\ErrorMessage;
 use App\Entity\AppUser;
-use App\Security\Exception\InvalidRequestContent;
-use App\Security\Exception\InvalidRequestFormat;
+use App\Definition\Exception\InvalidRequestContent;
+use App\Definition\Exception\InvalidRequestFormat;
 use App\Security\Hasher\CustomHasher;
 use App\Definition\SecurityUser;
 use Doctrine\Persistence\ManagerRegistry;

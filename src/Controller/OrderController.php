@@ -162,7 +162,7 @@ class OrderController extends BaseController
             ], Response::HTTP_CONFLICT);
 
         }
-
+        
         $entity_manager = $this->doctrine->getManager();
         $entity_manager->persist($order);
         $entity_manager->flush();
@@ -177,5 +177,53 @@ class OrderController extends BaseController
             'order' => $this->doctrine->getRepository(AppOrder::class)
             ->findAll()
         ]);
+    }
+
+    #[Route('streaming', name: 'streaming')]
+    public function streaming()
+    {
+        $file_path = '/home/iheb/Downloads/large.json';
+
+        $response = new StreamedResponse();
+
+        $response->setCallback(function () use($file_path) {
+            
+            $input_stream = fopen($file_path, 'rb');
+            $output_stream = fopen('php://output', 'wb');
+
+            error_log('B ' . memory_get_usage());
+
+            stream_copy_to_stream($input_stream, $output_stream);
+
+            error_log('C ' . memory_get_usage());
+
+            // $file_size = filesize($file_path);
+            
+            // $chunk_size = 8000;
+
+            // $number_of_chunks = floor($file_size / $chunk_size) + ($file_size % $chunk_size === 0 ? 0 : 1);
+
+            // for ($i = 0; $i < $number_of_chunks; $i++) {
+            //     $offset = $i * $chunk_size;
+            //     // $length = ((($offset + $chunk_size) <= $file_size) ? $chunk_size : $file_size - $offset) - 1;
+            //     stream_copy_to_stream($input_stream, $output_stream, $chunk_size, $offset);
+            // }
+
+
+            fclose($input_stream);
+            fclose($output_stream);
+
+            error_log('D ' . memory_get_usage());
+        });
+
+        $response->headers->set('Content-Type', 'application/octet-stream');
+
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT, basename($file_path)
+        );
+
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
     }
 }
