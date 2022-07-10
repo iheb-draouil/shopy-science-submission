@@ -126,7 +126,8 @@ class AuthorizationGuard extends AbstractAuthenticator
             $access_cookie = Cookie::create(JWTCookieNames::access)
             ->withValue($access_jwt)
             ->withExpires($now->modify('+1 day'))
-            ->withSecure(true);
+            // ->withSecure(true)
+            ;
     
             $response->headers->setCookie($access_cookie);
     

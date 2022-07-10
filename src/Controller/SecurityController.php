@@ -168,12 +168,14 @@ class SecurityController extends BaseController
         $access_cookie = Cookie::create(JWTCookieNames::access)
         ->withValue($access_jwt)
         ->withExpires($cookie_expiration)
-        ->withSecure(true);
+        // ->withSecure(true)
+        ;
 
         $refresh_cookie = Cookie::create(JWTCookieNames::refresh)
         ->withValue($refresh_jwt)
         ->withExpires($cookie_expiration)
-        ->withSecure(true);
+        // ->withSecure(true)
+        ;
 
         // sets the refresh token as HttpOnly cookie
         $response->headers->setCookie($access_cookie);
@@ -207,7 +209,8 @@ class SecurityController extends BaseController
         $access_cookie = Cookie::create(JWTCookieNames::access)
         ->withValue($access_jwt)
         ->withExpires($now->modify('+1 day'))
-        ->withSecure(true);
+        // ->withSecure(true)
+        ;
 
         $response->headers->setCookie($access_cookie);
         

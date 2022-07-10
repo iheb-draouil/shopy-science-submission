@@ -33,13 +33,13 @@ Move into the application's root directory:
 cd shopy-science-submission
 ```
 
-Create the security sub-directory:
+Create the keys sub-directory:
 ```bash
-mkdir security
+mkdir keys
 ```
 Move into the newly created directory and generate the private key / public key pair:
 ```bash
-cd security
+cd keys
 
 # generate the private key
 openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:2048

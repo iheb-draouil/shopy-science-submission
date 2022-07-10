@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    depends_on:
+      - database
+    ports:
+      - 8080:8080
+  
+  database:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+    restart: on-failure
+    ports:
+      - 3306:3306
