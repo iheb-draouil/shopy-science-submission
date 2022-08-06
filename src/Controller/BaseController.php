@@ -12,16 +12,16 @@ class BaseController extends AbstractController
 {
     protected $serializer;
     protected $validator;
-    protected $doctrine;
+    protected $manager_registry;
 
     public function __construct(
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        ManagerRegistry $doctrine,
+        ManagerRegistry $manager_registry,
     ) {
         $this->serializer = $serializer;
         $this->validator = $validator;
-        $this->doctrine = $doctrine;
+        $this->manager_registry = $manager_registry;
     }
 
     protected function toValidationErrorMap(ConstraintViolationListInterface $constraint_violation_list): array

@@ -37,6 +37,6 @@ security:
     firewalls:
         main:
             stateless: true
-            custom_authenticators:
-                - App\Security\Guard\AuthenticationGuard
-                - App\Security\Guard\AuthorizationGuard
+            # custom_authenticators:
+                # - App\Security\Guard\AuthenticationGuard
+                # - App\Security\Guard\AuthorizationGuard

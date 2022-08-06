@@ -10,10 +10,8 @@ class ErrorController
 {
     public function show(FlattenException $exception, Request $request)
     {
-        
         return new JsonResponse([
-            'xxx' => $exception->getMessage(),
-            'path' => $request->getPathInfo(),
+            'exception' => $exception->getMessage()
         ]);
     }
 }
